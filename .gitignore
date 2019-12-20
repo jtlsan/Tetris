@@ -1,0 +1,7 @@
+*.filters
+*.user
+*.vcxproj
+Tetris/Debug/
+Debug/
+*.sln
+.vs/
