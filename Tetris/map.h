@@ -14,10 +14,14 @@ private:
 public:
 	Map();
 	~Map();
-	void DrawBlock(ExtendedBlock& cur_block, int);
+	void InitialDraw();
+	void DrawBlock(ExtendedBlock& cur_block);
+	void MoveByArrow(ExtendedBlock&, int);
+	void PullDownBlock(ExtendedBlock&);
 	void DeleteBlock(ExtendedBlock& cur_block);
 	void DeleteLine();
-	bool IsLineFull();
+	void CheckLine();
+	bool IsLanded(ExtendedBlock&);
 	bool IsMovable(ExtendedBlock&);
 	bool& GetArrangePosition(ExtendedBlock&, int, int);
 	bool& GetArrangePosition(ExtendedBlock&, int, int, int&, int&);

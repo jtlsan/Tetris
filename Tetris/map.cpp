@@ -25,55 +25,83 @@ Map::Map()
 
 Map::~Map()
 {
-	for (int i = 0; i < 22; i++)
-		delete[] arrange[i];
+	//empty
 }
 
 
-void Map::DrawBlock(ExtendedBlock& cur_block, int input_arrow)
+void Map::InitialDraw()
 {
-	DeleteBlock(cur_block);
+	int x = 10, y = 5;
+	gotoxy(x, y);
+	for (int i = 0; i < 12; i++)
+		std::cout << "■";
+	for (int i = 0; i < 21; i++)
+	{
+		gotoxy(x, ++y);
+		std::cout << "■";
+		gotoxy(x + 22, y);
+		std::cout << "■";
+	}
+	gotoxy(x + 2, y);
+
+	for (int i = 0; i < 11; i++)
+		std::cout << "■";
+}
+
+
+void Map::MoveByArrow(ExtendedBlock& cur_block, int input_arrow)
+{
 	switch (input_arrow)
 	{
-		case Arrow::UP:
-			try
-			{
-				cur_block.Rotate();
-				IsMovable(cur_block);
+	case Arrow::UP:
+		try
+		{
+			cur_block.Rotate();
+			IsMovable(cur_block);
 
-			}
-			catch (MovementException & expn)
-			{
-				for (int i = 0; i < 3; i++)
-					cur_block.Rotate();
-			}
-			break;
-		case Arrow::LEFT:
-			try
-			{
-				cur_block.Set_xpos(cur_block.Get_xpos() - 1);
-				IsMovable(cur_block);
-			}
-			catch (MovementException & expn)
-			{
-				cur_block.Set_xpos(cur_block.Get_xpos() + 1);
-			}
-			break;
-		case Arrow::RIGHT:
-			try
-			{
+		}
+		catch (MovementException & expn)
+		{
+			for (int i = 0; i < 3; i++)
+				cur_block.Rotate();
+		}
+		break;
+	case Arrow::LEFT:
+		try
+		{
+			cur_block.Set_xpos(cur_block.Get_xpos() - 1);
+			IsMovable(cur_block);
+		}
+		catch (MovementException & expn)
+		{
+			cur_block.Set_xpos(cur_block.Get_xpos() + 1);
+		}
+		break;
+	case Arrow::RIGHT:
+		try
+		{
 			cur_block.Set_xpos(cur_block.Get_xpos() + 1);
 			IsMovable(cur_block);
-			}
-			catch (MovementException & expn)
-			{
-				cur_block.Set_xpos(cur_block.Get_xpos() - 1);
-			}
-			break;
+		}
+		catch (MovementException & expn)
+		{
+			cur_block.Set_xpos(cur_block.Get_xpos() - 1);
+		}
+		break;
 		// case Arrow::DOWN 필요
-		case Arrow::DOWN:
-			cur_block.Set_ypos(cur_block.Get_ypos() + 1);
+	case Arrow::DOWN:
+		try
+		{
+			PullDownBlock(cur_block);
+		}
+		catch (MovementException& expn) { }
 	}
+}
+
+void Map::DrawBlock(ExtendedBlock& cur_block)
+{
+	//삭제할 것들
+	DeleteBlock(cur_block);
 
 	//cur_block에 있는 4x4배열의 상대적 위치를 arrange 위치로 변환하여 arrange에 적용
 	int vertical, horizontal, abs_vertical, abs_horizontal;
@@ -90,6 +118,22 @@ void Map::DrawBlock(ExtendedBlock& cur_block, int input_arrow)
 				std::cout << "■";
 			}
 		}
+}
+
+
+void Map::PullDownBlock(ExtendedBlock& cur_block) throw (MovementException)
+{
+	try
+	{
+		cur_block.Set_ypos(cur_block.Get_ypos() + 1);
+		IsMovable(cur_block);
+	}
+	catch (MovementException& expn)
+	{
+		cur_block.Set_ypos(cur_block.Get_ypos() - 1);
+		throw;
+	}
+	DrawBlock(cur_block);
 }
 
 
@@ -144,9 +188,9 @@ bool& Map::GetArrangePosition(ExtendedBlock& cur_block, int i, int j, int& verti
 
 
 
-bool Map::IsLineFull()
+void Map::CheckLine()
 {
-/*
+
 	for (int i = 1; i < 21; i++)
 		for (int j = 1; j < 11; j++)
 		{
@@ -155,10 +199,25 @@ bool Map::IsLineFull()
 			if (j == 10)
 				line_status[i-1] = true;
 		}
-*/
-	return true;
 }
 
+
+bool Map::IsLanded(ExtendedBlock& cur_block)
+{
+	for(int i = 0; i < 4; i++)
+		for (int j = 0; j < 4; j++)
+		{
+			if (*(cur_block.Get_space() + i * 4 + j))
+			{
+				if(i == 3 || !(*(cur_block.Get_space() + (i+1) * 4 + j)))
+					if (GetArrangePosition(cur_block, i + 1, j))
+					{
+						return true;
+					}
+			}
+		}
+	return false;
+}
 
 void Map::DeleteLine()
 {

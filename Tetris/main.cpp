@@ -5,6 +5,7 @@
 #include "blocks.h"
 #include "base.h"
 #include "map.h"
+#include "MapHandler.h"
 using namespace std;
 #define Xmax 79
 #define Ymax 24
@@ -46,12 +47,12 @@ int main() {
 	char key;
 	int x = 10, y = 5, i = 1;
 	SetConsoleTitle("Tetris");
-	Map map;
-	ExtendedBlock block(2);
+	MapHandler mapHandler;
+	while(1)
+		mapHandler.PlayByInput();
 	
 	
 	/*
-	*/
 	gotoxy(x, y);
 	for (int i = 0; i < 12; i++)
 		cout << "бс";
@@ -71,6 +72,7 @@ int main() {
 		key = _getch();
 		map.DrawBlock(block, key);
 	}
+	*/
 	
 
 }

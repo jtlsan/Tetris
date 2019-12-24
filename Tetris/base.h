@@ -15,7 +15,7 @@
 		S_BLOCK = 4,
 		Z_BLOCK = 5,
 		T_BLOCK = 6,
-		O_BLOCK = 7	
+		O_BLOCK = 8	
 	};
 
 	enum Arrow

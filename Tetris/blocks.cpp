@@ -14,6 +14,7 @@ void ExtendedBlock::InitSpace()
 		case BlockType::I_BLOCK:
 			for (int i = 0; i < 4; i++)
 				space[i][1] = true;
+			Set_ypos(3);
 			break;
 		case BlockType::J_BLOCK:
 			for (int i = 1; i < 4; i++)
