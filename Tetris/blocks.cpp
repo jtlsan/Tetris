@@ -1,9 +1,56 @@
 #include "blocks.h"
 #include "base.h"
 
-ExtendedBlock::ExtendedBlock(int type) : Block(), blockType(type)
+ExtendedBlock::ExtendedBlock(int type) : Block(), blockType(type), color(type)
 {
-	// empty
+	InitSpace();
+}
+
+
+void ExtendedBlock::InitSpace()
+{
+	switch (blockType)
+	{
+		case BlockType::I_BLOCK:
+			for (int i = 0; i < 4; i++)
+				space[i][1] = true;
+			break;
+		case BlockType::J_BLOCK:
+			for (int i = 1; i < 4; i++)
+				space[i][1] = true;
+			space[3][0] = true;
+			break;
+		case BlockType::L_BLOCK:
+			for (int i = 1; i < 4; i++)
+				space[i][1] = true;
+			space[3][2] = true;
+			break;
+		case BlockType::O_BLOCK:
+			for (int i = 2; i < 4; i++)
+			{
+				space[i][1] = true;
+				space[i][2] = true;
+			}
+			break;
+		case BlockType::S_BLOCK:
+			space[2][2] = true;
+			space[2][1] = true;
+			space[3][1] = true;
+			space[3][0] = true;
+			break;
+		case BlockType::T_BLOCK:
+			space[2][1] = true;
+			space[3][0] = true;
+			space[3][1] = true;
+			space[3][2] = true;
+			break;
+		case BlockType::Z_BLOCK:
+			space[2][0] = true;
+			space[2][1] = true;
+			space[3][1] = true;
+			space[3][2] = true;
+			break;
+	}
 }
 
 
@@ -13,7 +60,7 @@ void ExtendedBlock::Rotate()
 {
 	int gap, record_n = 0;
 	int x_record[4], y_record[4];	//space의 배열에서 새로 true가 될 위치를 기록해둔다.
-	if ((blockType != blockinfo::O_BLOCK))	//OBlock은 회전이 불가능하므로
+	if ((blockType != BlockType::O_BLOCK))	//OBlock은 회전이 불가능하므로
 	{
 
 		for (int i = 0; i < 4; i++)
@@ -82,5 +129,5 @@ void ExtendedBlock::Rotate()
 
 ExtendedBlock::~ExtendedBlock()
 {
-	ExtendedBlock::~ExtendedBlock();
+	Block::~Block();
 }

@@ -2,9 +2,13 @@
 #include <windows.h>
 #include <conio.h>
 #include <iostream>
+#include "blocks.h"
+#include "base.h"
+#include "map.h"
 using namespace std;
 #define Xmax 79
 #define Ymax 24
+
 void move_arrow_key(char key, int* x, int* y, int x_b, int y_b) {
 	switch (key) {
 	case 72:
@@ -30,27 +34,23 @@ void move_arrow_key(char key, int* x, int* y, int x_b, int y_b) {
 }
 
 
-
+/*
 void gotoxy(int x, int y) {
 	COORD Pos = { x-1 ,y - 1 };
 	SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), Pos);
 }
+*/
 
 
 int main() {
 	char key;
 	int x = 10, y = 5, i = 1;
 	SetConsoleTitle("Tetris");
+	Map map;
+	ExtendedBlock block(2);
+	
+	
 	/*
-	cout << "aaa";
-	do {
-		gotoxy(x, y);
-		printf("д▒");
-		
-		key = _getch();
-		move_arrow_key(key, &x, &y, Xmax, Ymax);
-		
-	} while (key != 27);
 	*/
 	gotoxy(x, y);
 	for (int i = 0; i < 12; i++)
@@ -66,4 +66,11 @@ int main() {
 	
 	for (int i = 0; i < 11; i++)
 		cout << "бс";
+	while (1)
+	{
+		key = _getch();
+		map.DrawBlock(block, key);
+	}
+	
+
 }

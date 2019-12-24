@@ -4,10 +4,10 @@
 #include <iostream>
 #include <time.h>
 #include <string>
+#include <windows.h>
+#include "exceptions.h"
 
-namespace blockinfo
-{
-	enum type
+	enum BlockType
 	{
 		I_BLOCK = 1,
 		J_BLOCK = 2,
@@ -17,7 +17,15 @@ namespace blockinfo
 		T_BLOCK = 6,
 		O_BLOCK = 7	
 	};
-}
 
+	enum Arrow
+	{
+		UP = 72,
+		DOWN = 80,
+		LEFT = 75,
+		RIGHT = 77
+	};
+
+	void gotoxy(int, int);
 
 #endif

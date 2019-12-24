@@ -19,7 +19,7 @@ public:
 	void Set_ypos(int input) { ypos = input; }
 	int Get_center_xpos() { return center_xpos; }
 	int Get_center_ypos() { return center_ypos; }
-	void InitSpace();
+	bool* Get_space() { return (bool*)space; }
 	~Block();
 };
 
