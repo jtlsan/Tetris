@@ -9,10 +9,12 @@ private:
 	int color;
 public:
 	ExtendedBlock(int);
+	ExtendedBlock();
 	virtual void Rotate();
 	int GetBlockType() { return blockType; }
 	int GetBlockColor() { return color; }
 	void InitSpace();
+	ExtendedBlock& operator=(ExtendedBlock&);
 	~ExtendedBlock();
 };
 

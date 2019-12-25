@@ -7,6 +7,12 @@ ExtendedBlock::ExtendedBlock(int type) : Block(), blockType(type), color(type)
 }
 
 
+ExtendedBlock::ExtendedBlock()
+{
+	//empty
+}
+
+
 void ExtendedBlock::InitSpace()
 {
 	switch (blockType)
@@ -124,7 +130,13 @@ void ExtendedBlock::Rotate()
 }
 
 
-
+ExtendedBlock& ExtendedBlock::operator=(ExtendedBlock& ref)
+{
+	blockType = ref.blockType;
+	color = ref.color;
+	Block::operator=(ref);
+	return *this;
+}
 
 
 

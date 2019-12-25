@@ -20,6 +20,7 @@ public:
 	int Get_center_xpos() { return center_xpos; }
 	int Get_center_ypos() { return center_ypos; }
 	bool* Get_space() { return (bool*)space; }
+	Block& operator=(Block&);
 	~Block();
 };
 

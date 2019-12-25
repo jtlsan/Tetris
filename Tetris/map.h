@@ -19,10 +19,11 @@ public:
 	void MoveByArrow(ExtendedBlock&, int);
 	void PullDownBlock(ExtendedBlock&);
 	void DeleteBlock(ExtendedBlock& cur_block);
-	void DeleteLine();
+	void DeleteLine(int);
 	void CheckLine();
 	bool IsLanded(ExtendedBlock&);
 	bool IsMovable(ExtendedBlock&);
+	bool IsLost();
 	bool& GetArrangePosition(ExtendedBlock&, int, int);
 	bool& GetArrangePosition(ExtendedBlock&, int, int, int&, int&);
 };

@@ -101,7 +101,7 @@ void Map::MoveByArrow(ExtendedBlock& cur_block, int input_arrow)
 void Map::DrawBlock(ExtendedBlock& cur_block)
 {
 	//삭제할 것들
-	DeleteBlock(cur_block);
+	
 
 	//cur_block에 있는 4x4배열의 상대적 위치를 arrange 위치로 변환하여 arrange에 적용
 	int vertical, horizontal, abs_vertical, abs_horizontal;
@@ -118,6 +118,7 @@ void Map::DrawBlock(ExtendedBlock& cur_block)
 				std::cout << "■";
 			}
 		}
+	gotoxy(0, 0);
 }
 
 
@@ -149,7 +150,7 @@ void Map::DeleteBlock(ExtendedBlock& cur_block)
 				abs_vertical = 5 + vertical;
 				abs_horizontal = 10 + horizontal * 2;
 				gotoxy(abs_horizontal, abs_vertical);
-				printf("  ");
+				std::cout << "  ";
 			}
 		}
 }
@@ -182,7 +183,6 @@ bool& Map::GetArrangePosition(ExtendedBlock& cur_block, int i, int j, int& verti
 {
 	vertical = cur_block.Get_ypos() + i - cur_block.Get_center_ypos();
 	horizontal = cur_block.Get_xpos() + j - cur_block.Get_center_xpos();
-	//horizontal = cur_block.Get_xpos() + (j - cur_block.Get_center_xpos()) * 2;
 	return arrange[vertical][horizontal];
 }
 
@@ -197,7 +197,7 @@ void Map::CheckLine()
 			if (!arrange[i][j])
 				break;
 			if (j == 10)
-				line_status[i-1] = true;
+				DeleteLine(i);
 		}
 }
 
@@ -212,6 +212,7 @@ bool Map::IsLanded(ExtendedBlock& cur_block)
 				if(i == 3 || !(*(cur_block.Get_space() + (i+1) * 4 + j)))
 					if (GetArrangePosition(cur_block, i + 1, j))
 					{
+						block_list.push_back(cur_block);
 						return true;
 					}
 			}
@@ -219,7 +220,16 @@ bool Map::IsLanded(ExtendedBlock& cur_block)
 	return false;
 }
 
-void Map::DeleteLine()
+
+bool Map::IsLost()
+{
+	for (int i = 1; i < 11; i++)
+		if (arrange[1][i])
+			return true;
+	return false;
+}
+
+void Map::DeleteLine(int line)
 {
 	/*
 	for (int i = 0; i < 20; i++)
