@@ -18,6 +18,7 @@ public:
 	void DrawBlock(ExtendedBlock& cur_block);
 	void MoveByArrow(ExtendedBlock&, int);
 	void PullDownBlock(ExtendedBlock&);
+	void PullToBottom(ExtendedBlock&);
 	void DeleteBlock(ExtendedBlock& cur_block);
 	void DeleteLine(int);
 	void CheckLine();

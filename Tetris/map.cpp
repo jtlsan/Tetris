@@ -92,7 +92,7 @@ void Map::MoveByArrow(ExtendedBlock& cur_block, int input_arrow)
 	case Arrow::DOWN:
 		try
 		{
-			PullDownBlock(cur_block);
+			PullToBottom(cur_block);
 		}
 		catch (MovementException& expn) { }
 	}
@@ -118,6 +118,7 @@ void Map::DrawBlock(ExtendedBlock& cur_block)
 				std::cout << "бс";
 			}
 		}
+
 	gotoxy(0, 0);
 }
 
@@ -132,7 +133,25 @@ void Map::PullDownBlock(ExtendedBlock& cur_block) throw (MovementException)
 	catch (MovementException& expn)
 	{
 		cur_block.Set_ypos(cur_block.Get_ypos() - 1);
+		DrawBlock(cur_block);
 		throw;
+	}
+	DrawBlock(cur_block);
+}
+
+
+void Map::PullToBottom(ExtendedBlock& cur_block)
+{
+	try
+	{
+		while (IsMovable(cur_block))
+		{
+			cur_block.Set_ypos(cur_block.Get_ypos() + 1);
+		}
+	}
+	catch (MovementException & expn) 
+	{
+		cur_block.Set_ypos(cur_block.Get_ypos() - 1);
 	}
 	DrawBlock(cur_block);
 }

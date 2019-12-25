@@ -3,7 +3,10 @@
 #include "blocks.h"
 #include <conio.h>
 #include <ctime>
+#include <mutex>
 #include "exceptions.h"
+
+std::mutex mtx;
 
 MapHandler::MapHandler()
 {
@@ -34,6 +37,7 @@ void MapHandler::GenerateCurBlock()
 	}
 	ExtendedBlock block(type);
 	cur_block = block;
+	map.DrawBlock(block);
 }
 
 
@@ -44,9 +48,15 @@ void MapHandler::PlayByInput()
 	while(!map.IsLanded(cur_block))
 	{
 		key = _getch();
+		/*
+		if (map.IsLanded(cur_block))
+			break;
+		*/
+		mtx.lock();
 		map.DeleteBlock(cur_block);
 		map.MoveByArrow(cur_block, key);
 		map.DrawBlock(cur_block);
+		mtx.unlock();
 	}
 	if (map.IsLost())
 		game_result = false;
@@ -56,16 +66,28 @@ void MapHandler::PlayByInput()
 
 void MapHandler::PlayByTime()
 {
-	map.DrawBlock(cur_block);
+	//map.DrawBlock(cur_block);
 	while (!map.IsLanded(cur_block))
 	{
 		Sleep(1000);
+		/*
+		if (map.IsLanded(cur_block))
+			break;
+		*/
 		try
 		{
+			mtx.lock();
 			map.DeleteBlock(cur_block);
 			map.PullDownBlock(cur_block);
+			
 		}
-		catch (MovementException & expn){}
+		catch (MovementException & expn)
+		{
+			//map.DrawBlock(cur_block);
+		}
+		mtx.unlock();
+		
+
 	}
 	if (map.IsLost())
 		game_result = false;
