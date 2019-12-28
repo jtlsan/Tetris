@@ -92,3 +92,14 @@ void MapHandler::PlayByTime()
 	if (map.IsLost())
 		game_result = false;
 }
+
+
+void MapHandler::DeleteFullLine()
+{
+	map.CheckLine();
+}
+
+void MapHandler::PushBlock()
+{
+	map.PushBlockList(cur_block);
+}

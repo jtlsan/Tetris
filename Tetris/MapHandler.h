@@ -18,6 +18,8 @@ public:
 	void GenerateCurBlock();
 	void PlayByInput();
 	void PlayByTime();
+	void DeleteFullLine();
+	void PushBlock();
 	bool get_game_result() { return game_result; }
 };
 

@@ -26,7 +26,8 @@ int main() {
 		
 		by_input.detach();
 		by_time.join();
-		
+		mapManager.PushBlock();
+		mapManager.DeleteFullLine();
 		
 	}
 	

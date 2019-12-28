@@ -90,11 +90,9 @@ void Map::MoveByArrow(ExtendedBlock& cur_block, int input_arrow)
 		break;
 		// case Arrow::DOWN 필요
 	case Arrow::DOWN:
-		try
-		{
-			PullToBottom(cur_block);
-		}
-		catch (MovementException& expn) { }
+		PullToBottom(cur_block);
+		break;
+
 	}
 }
 
@@ -153,7 +151,7 @@ void Map::PullToBottom(ExtendedBlock& cur_block)
 	{
 		cur_block.Set_ypos(cur_block.Get_ypos() - 1);
 	}
-	DrawBlock(cur_block);
+	//DrawBlock(cur_block);
 }
 
 
@@ -175,7 +173,7 @@ void Map::DeleteBlock(ExtendedBlock& cur_block)
 }
 
 
-bool Map::IsMovable(ExtendedBlock& cur_block)
+bool Map::IsMovable(ExtendedBlock& cur_block) throw (MovementException)
 {
 	for (int i = 0; i < 4; i++)
 		for (int j = 0; j < 4; j++)
@@ -206,18 +204,21 @@ bool& Map::GetArrangePosition(ExtendedBlock& cur_block, int i, int j, int& verti
 }
 
 
-
+// 블록 착지 후 꽉 찬 가로줄이 있는지 검사합니다.
 void Map::CheckLine()
 {
 
-	for (int i = 1; i < 21; i++)
+	for (int i = 20; i > 0; i--)
 		for (int j = 1; j < 11; j++)
 		{
 			if (!arrange[i][j])
 				break;
 			if (j == 10)
 				DeleteLine(i);
+
 		}
+	//test
+	
 }
 
 
@@ -231,12 +232,17 @@ bool Map::IsLanded(ExtendedBlock& cur_block)
 				if(i == 3 || !(*(cur_block.Get_space() + (i+1) * 4 + j)))
 					if (GetArrangePosition(cur_block, i + 1, j))
 					{
-						block_list.push_back(cur_block);
 						return true;
 					}
 			}
 		}
 	return false;
+}
+
+
+void Map::PushBlockList(ExtendedBlock& cur_block)
+{
+	block_list.push_back(cur_block);
 }
 
 
@@ -250,12 +256,59 @@ bool Map::IsLost()
 
 void Map::DeleteLine(int line)
 {
-	/*
-	for (int i = 0; i < 20; i++)
+	int vertical, horizontal;
+	int num = 1;
+
+	for (list<ExtendedBlock>::iterator itr = block_list.begin(); itr != block_list.end(); itr++)
 	{
-		if (line_status[i])
-			for(int j = 0; j < 10; j++)
-				arrange
+		for(int j = 0; j < 4; j++)
+			for (int k = 0; k < 4; k++)
+			{
+				if (bool& position_in_space = *((*itr).Get_space() + j * 4 + k))
+				{
+					bool& position_in_arrange = GetArrangePosition(*itr, j, k, vertical, horizontal);
+					if (vertical == line)
+					{
+						position_in_arrange = false;
+						position_in_space = false;
+						int abs_vertical = 5 + vertical;
+						int abs_horizontal = 10 + horizontal * 2;
+						gotoxy(abs_horizontal, abs_vertical);
+						std::cout << "  ";
+					}
+				}
+			}
+		
 	}
-	*/
+	PullDownLines(line);
+}
+
+
+void Map::PullDownLines(int line)
+{
+	int vertical, horizontal, num = 1;
+	for(line--; line > 0; line--)
+		for (list<ExtendedBlock>::iterator itr = block_list.begin(); itr != block_list.end(); itr++)
+		{
+			for (int j = 0; j < 4; j++)
+				for (int k = 0; k < 4; k++)
+				{
+					if (bool& position_in_space = *((*itr).Get_space() + j * 4 + k))
+					{
+						
+						bool& position_in_arrange = GetArrangePosition(*itr, j, k, vertical, horizontal);
+						if (vertical == line)
+						{
+							//블록에 연연하지 말고 arrange 자체에서 지우고 그려야 하나
+							DeleteBlock(*itr);
+							
+							PullToBottom(*itr);
+							DrawBlock(*itr);
+						}
+					}				
+				}
+				
+		}
+	
+	
 }

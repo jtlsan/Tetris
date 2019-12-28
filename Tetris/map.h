@@ -3,13 +3,13 @@
 
 #include "blocks.h"
 #include <list>
-
+using std::list;
 class Map
 {
 private:
 	bool arrange[22][12];
 	bool line_status[20];
-	std::list<ExtendedBlock> block_list;
+	list<ExtendedBlock> block_list;
 
 public:
 	Map();
@@ -21,6 +21,8 @@ public:
 	void PullToBottom(ExtendedBlock&);
 	void DeleteBlock(ExtendedBlock& cur_block);
 	void DeleteLine(int);
+	void PullDownLines(int);
+	void PushBlockList(ExtendedBlock&);
 	void CheckLine();
 	bool IsLanded(ExtendedBlock&);
 	bool IsMovable(ExtendedBlock&);
