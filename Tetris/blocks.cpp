@@ -4,6 +4,12 @@
 ExtendedBlock::ExtendedBlock(int type) : Block(), blockType(type), color(type)
 {
 	InitSpace();
+	for(int i = 0; i < 4; i++)
+		for (int j = 0; j < 4; j++)
+		{
+			if (space[i][j].Is_active())
+				space[i][j].set_color(color);
+		}
 }
 
 
@@ -19,48 +25,69 @@ void ExtendedBlock::InitSpace()
 	{
 		case BlockType::I_BLOCK:
 			for (int i = 0; i < 4; i++)
-				space[i][1] = true;
+			{
+				space[i][1].set_active(true);
+			}
 			Set_ypos(3);
+			SetCellPosByCenter();
 			break;
 		case BlockType::J_BLOCK:
 			for (int i = 1; i < 4; i++)
-				space[i][1] = true;
-			space[3][0] = true;
+				space[i][1].set_active(true);
+			space[3][0].set_active(true);
+			SetCellPosByCenter();
 			break;
 		case BlockType::L_BLOCK:
 			for (int i = 1; i < 4; i++)
-				space[i][1] = true;
-			space[3][2] = true;
+				space[i][1].set_active(true);
+			space[3][2].set_active(true);
+			SetCellPosByCenter();
 			break;
 		case BlockType::O_BLOCK:
 			for (int i = 2; i < 4; i++)
 			{
-				space[i][1] = true;
-				space[i][2] = true;
+				space[i][1].set_active(true);
+				space[i][2].set_active(true);
 			}
+			SetCellPosByCenter();
 			break;
 		case BlockType::S_BLOCK:
-			space[2][2] = true;
-			space[2][1] = true;
-			space[3][1] = true;
-			space[3][0] = true;
+			space[2][2].set_active(true);
+			space[2][1].set_active(true);
+			space[3][1].set_active(true);
+			space[3][0].set_active(true);
+			SetCellPosByCenter();
 			break;
 		case BlockType::T_BLOCK:
-			space[2][1] = true;
-			space[3][0] = true;
-			space[3][1] = true;
-			space[3][2] = true;
+			space[2][1].set_active(true);
+			space[3][0].set_active(true);
+			space[3][1].set_active(true);
+			space[3][2].set_active(true);
+			SetCellPosByCenter();
 			break;
 		case BlockType::Z_BLOCK:
-			space[2][0] = true;
-			space[2][1] = true;
-			space[3][1] = true;
-			space[3][2] = true;
+			space[2][0].set_active(true);
+			space[2][1].set_active(true);
+			space[3][1].set_active(true);
+			space[3][2].set_active(true);
+			SetCellPosByCenter();
 			break;
 	}
 }
 
 
+void ExtendedBlock::SetCellPosByCenter()
+{
+	for(int i = 0; i < 4; i++)
+		for (int j = 0; j < 4; j++)
+		{
+			if (space[i][j].Is_active())
+			{
+				space[i][j].set_xpos(Get_xpos() + (j - Get_center_xpos()));
+				space[i][j].set_ypos(Get_ypos() + (i - Get_center_ypos()));
+			}
+		}
+}
 
 // 모든 블록에 대해 4x4 범위 내에서 우측으로 90도 돌린다.
 void ExtendedBlock::Rotate()
@@ -73,9 +100,9 @@ void ExtendedBlock::Rotate()
 		for (int i = 0; i < 4; i++)
 			for (int j = 0; j < 4; j++)
 			{
-				if (space[i][j])
+				if (space[i][j].Is_active())
 				{
-					space[i][j] = false;
+					space[i][j].set_active(false);
 					if (j == Get_center_xpos())
 					{
 						gap = Get_center_ypos() - i;
@@ -125,8 +152,9 @@ void ExtendedBlock::Rotate()
 				}
 			}
 		for (int i = 0; i < 4; i++)
-			space[y_record[i]][x_record[i]] = true;
+			space[y_record[i]][x_record[i]].set_active(true);
 	}
+	SetCellPosByCenter();
 }
 
 

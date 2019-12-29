@@ -13,6 +13,7 @@ public:
 	virtual void Rotate();
 	int GetBlockType() { return blockType; }
 	int GetBlockColor() { return color; }
+	void SetCellPosByCenter();
 	void InitSpace();
 	ExtendedBlock& operator=(ExtendedBlock&);
 	~ExtendedBlock();

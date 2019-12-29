@@ -12,10 +12,13 @@ private:
 	bool game_result;
 	int before_type;
 	ExtendedBlock cur_block;
+	ExtendedBlock next_block;
 public:
 	MapHandler();
 	~MapHandler();
 	void GenerateCurBlock();
+	void GenerateNextBlock();
+	void SwitchNextToCurBlock();
 	void PlayByInput();
 	void PlayByTime();
 	void DeleteFullLine();

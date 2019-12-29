@@ -16,12 +16,16 @@ public:
 	~Map();
 	void InitialDraw();
 	void DrawBlock(ExtendedBlock& cur_block);
+	void DrawCell(Cell&);
 	void MoveByArrow(ExtendedBlock&, int);
 	void PullDownBlock(ExtendedBlock&);
+	//void PullDownCell(Cell&);
 	void PullToBottom(ExtendedBlock&);
+	void PullCellsToBottom(Cell&);
 	void DeleteBlock(ExtendedBlock& cur_block);
 	void DeleteLine(int);
-	void PullDownLines(int);
+	void EraseCell(Cell&);
+	void ArrangeCells(int);
 	void PushBlockList(ExtendedBlock&);
 	void CheckLine();
 	bool IsLanded(ExtendedBlock&);
