@@ -7,8 +7,7 @@ ExtendedBlock::ExtendedBlock(int type) : Block(), blockType(type), color(type)
 	for(int i = 0; i < 4; i++)
 		for (int j = 0; j < 4; j++)
 		{
-			if (space[i][j].Is_active())
-				space[i][j].set_color(color);
+			space[i][j].set_color(color);
 		}
 }
 

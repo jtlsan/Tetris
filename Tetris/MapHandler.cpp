@@ -25,6 +25,7 @@ MapHandler::~MapHandler()
 
 void MapHandler::GenerateCurBlock()
 {
+	//type ¹Ù²Ù±â
 	int type = 0;
 	srand((unsigned int)time(0));
 	while (type == 0 || type == 7)

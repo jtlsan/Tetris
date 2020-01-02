@@ -21,13 +21,14 @@ public:
 	void PullDownBlock(ExtendedBlock&);
 	//void PullDownCell(Cell&);
 	void PullToBottom(ExtendedBlock&);
-	void PullCellsToBottom(Cell&);
+	void PullCellsToBottom(Cell&, ExtendedBlock& cur_block, int);
 	void DeleteBlock(ExtendedBlock& cur_block);
 	void DeleteLine(int);
 	void EraseCell(Cell&);
 	void ArrangeCells(int);
 	void PushBlockList(ExtendedBlock&);
 	void CheckLine();
+	//bool IsCellAlone(Cell&, ExtendedBlock&);
 	bool IsLanded(ExtendedBlock&);
 	bool IsMovable(ExtendedBlock&);
 	bool IsLost();

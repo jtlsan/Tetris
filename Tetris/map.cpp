@@ -99,7 +99,7 @@ void Map::DrawBlock(ExtendedBlock& cur_block)
 	//cur_block에 있는 4x4배열의 상대적 위치를 arrange 위치로 변환하여 arrange에 적용
 	int vertical, horizontal, abs_vertical, abs_horizontal;
 	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), cur_block.GetBlockColor());
-	for(int i = 0; i < 4; i++)
+	for (int i = 0; i < 4; i++)
 		for (int j = 0; j < 4; j++)
 		{
 			if ((*(cur_block.get_cell() + (i * 4) + j)).Is_active())
@@ -112,19 +112,20 @@ void Map::DrawBlock(ExtendedBlock& cur_block)
 			}
 		}
 	/*
-	gotoxy(0, 0);
-	for (int i = 0; i < 4; i++)
+	gotoxy(50, 5);
+	for (int i = 0; i < 22; i++)
 	{
-		for (int j = 0; j < 4; j++)
+		for (int j = 0; j < 12; j++)
 		{
-			if ((*(cur_block.get_cell() + i * 4 + j)).Is_active())
-			{
-				std::cout << "xpos : " << (*(cur_block.get_cell() + i * 4 + j)).get_xpos();
-				std::cout << "| ypos : " << (*(cur_block.get_cell() + i * 4 + j)).get_ypos() <<std::endl;
-			}
+			if (arrange[i][j])
+				std::cout << "O";
+			else
+				std::cout << "X";
 		}
+		gotoxy(50, 6 + i);
 	}
 	*/
+	
 }
 
 
@@ -225,8 +226,8 @@ void Map::CheckLine()
 			{
 				DeleteLine(i);
 				ArrangeCells(i);
+				i++;
 			}
-
 		}
 	//test
 	
@@ -235,7 +236,6 @@ void Map::CheckLine()
 
 bool Map::IsLanded(ExtendedBlock& cur_block)
 {
-	static int num = 1;
 	for(int i = 0; i < 4; i++)
 		for (int j = 0; j < 4; j++)
 		{
@@ -244,29 +244,10 @@ bool Map::IsLanded(ExtendedBlock& cur_block)
 				if(i == 3 || !((*(cur_block.get_cell() + ((i+1) * 4) + j)).Is_active()))
 					if (GetArrangePosition(cur_block, i + 1, j))
 					{
-						//test
-						if (num == 1)
-						{
-							gotoxy(0, 0);
-							for (int i = 0; i < 4; i++)
-							{
-								for (int j = 0; j < 4; j++)
-								{
-									if ((*(cur_block.get_cell() + i * 4 + j)).Is_active())
-									{
-										std::cout << "xpos : " << (*(cur_block.get_cell() + i * 4 + j)).get_xpos();
-										std::cout << "| ypos : " << (*(cur_block.get_cell() + i * 4 + j)).get_ypos() << std::endl;
-										//cell의 xpos, ypos가 arrange의 가로,세로와 호환이 제대로 되는지 확인하기
-										std::cout << "|| arrange"
-									}
-								}
-							}
-							num++;
-						}
-						//endtest
-					
 						return true;
 					}
+					
+					
 			}
 		}
 	return false;
@@ -291,22 +272,21 @@ void Map::DeleteLine(int line)
 {
 	int vertical, horizontal;
 	int num = 1;
-	Cell tmp_cell;
+	
 
 	for (list<ExtendedBlock>::iterator itr = block_list.begin(); itr != block_list.end(); itr++)
 	{
 		for(int j = 0; j < 4; j++)
 			for (int k = 0; k < 4; k++)
 			{
-				tmp_cell = *((*itr).get_cell() + (j * 4) + k);
+				Cell& tmp_cell = *((*itr).get_cell() + (j * 4) + k);
 				if (tmp_cell.Is_active())
 				{
 					
 					//bool& position_in_arrange = GetArrangePosition(*itr, j, k, vertical, horizontal);
 					if (tmp_cell.get_ypos() == line)
 					{
-						(*((*itr).get_cell() + j * 4 + k)).set_active(false);
-						//position_in_space = false;
+						tmp_cell.set_active(false);
 						arrange[tmp_cell.get_ypos()][tmp_cell.get_xpos()] = false;
 						int abs_vertical = 5 + tmp_cell.get_ypos();
 						int abs_horizontal = 10 + tmp_cell.get_xpos() * 2;
@@ -322,24 +302,23 @@ void Map::DeleteLine(int line)
 
 void Map::ArrangeCells(int line)
 {
-	int vertical, horizontal;
-	Cell tmp_cell;
+	int num = 1, origianl_line = line;
 	for(line--; line > 0; line--)
 		for (list<ExtendedBlock>::iterator itr = block_list.begin(); itr != block_list.end(); itr++)
 		{
 			for (int j = 0; j < 4; j++)
 				for (int k = 0; k < 4; k++)
 				{
-					tmp_cell = *((*itr).get_cell() + j * 4 + k);
+					Cell& tmp_cell = *((*itr).get_cell() + (j * 4) + k);
 					if (tmp_cell.Is_active())
 					{
 						//bool& position_in_arrange = GetArrangePosition(*itr, j, k, vertical, horizontal);
 						if (tmp_cell.get_ypos() == line)
 						{
-							//블록에 연연하지 말고 arrange 자체에서 지우고 그려야 하나
 							EraseCell(tmp_cell);
-							//PullCellsToBottom(tmp_cell);
-							//DrawCell(tmp_cell);
+							PullCellsToBottom(tmp_cell, *itr, origianl_line);
+							DrawCell(tmp_cell);
+							
 						}
 					}				
 				}
@@ -351,7 +330,9 @@ void Map::ArrangeCells(int line)
 void Map::EraseCell(Cell& cur_cell)
 {
 	arrange[cur_cell.get_ypos()][cur_cell.get_xpos()] = false;
-	gotoxy(cur_cell.get_xpos(), cur_cell.get_ypos());
+	int abs_vertical = 5 + cur_cell.get_ypos();
+	int abs_horizontal = 10 + cur_cell.get_xpos() * 2;
+	gotoxy(abs_horizontal, abs_vertical);
 	std::cout << "  ";
 }
 
@@ -359,39 +340,73 @@ void Map::EraseCell(Cell& cur_cell)
 void Map::DrawCell(Cell& cur_cell)
 {
 	arrange[cur_cell.get_ypos()][cur_cell.get_xpos()] = true;
-	gotoxy(cur_cell.get_ypos(), cur_cell.get_xpos());
+	int abs_vertical = 5 + cur_cell.get_ypos();
+	int abs_horizontal = 10 + cur_cell.get_xpos() * 2;
+	gotoxy(abs_horizontal, abs_vertical);
 	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), cur_cell.get_color());
 	std::cout << "■";
 	gotoxy(0, 0);
 }
 
 
-void Map::PullCellsToBottom(Cell& cur_cell)
+void Map::PullCellsToBottom(Cell& cur_cell, ExtendedBlock& cur_block, int line)
 {
-
-	while (!arrange[cur_cell.get_ypos() + 1][cur_cell.get_xpos()])
+	while (!arrange[cur_cell.get_ypos() + 1][cur_cell.get_xpos()] && cur_cell.get_ypos() < line)
 	{
 		cur_cell.set_ypos(cur_cell.get_ypos() + 1);
 	}
-	gotoxy(50, 5);
-	std::cout << "xpos : " << cur_cell.get_xpos();
-	std::cout << "| ypos : " << cur_cell.get_ypos() << std::endl;
 }
 
 /*
-void Map::PullToBottomCells(ExtendedBlock& cur_block)
+bool Map::IsCellAlone(Cell& cur_cell, ExtendedBlock& cur_block)
 {
-	int vertical, horizontal;
-	for (int i = 0; i < 4; i++)
-	{
+	int cell_x_location, cell_y_location;
+	Cell tmp_cell;
+	for(int i = 0; i < 4; i++)
 		for (int j = 0; j < 4; j++)
 		{
-			if ((*(cur_block.get_cell() + i * 4 + j)).Is_active())
+			tmp_cell = *(cur_block.get_cell() + (i * 4) + j);
+			if (tmp_cell.get_xpos() == cur_cell.get_xpos() && tmp_cell.get_ypos() == cur_cell.get_ypos())
 			{
-				bool& position_in_arrange = GetArrangePosition(cur_block, i, j, vertical, horizontal);
-
+				cell_x_location = cur_cell.get_xpos();
+				cell_y_location = cur_cell.get_ypos();
+				break;
 			}
 		}
+
+	switch(cell_x_location)
+	{
+		case 0:
+			if ((*(cur_block.get_cell() + ((cell_y_location) * 4) + cell_x_location + 1)).Is_active())
+				return false;
+			break;
+		case 3:
+			if ((*(cur_block.get_cell() + ((cell_y_location) * 4) + cell_x_location - 1)).Is_active())
+				return false;
+			break;
+		default:
+			if ((*(cur_block.get_cell() + ((cell_y_location) * 4) + cell_x_location + 1)).Is_active())
+				return false;
+			if ((*(cur_block.get_cell() + ((cell_y_location) * 4) + cell_x_location - 1)).Is_active())
+				return false;
 	}
+
+	switch (cell_y_location)
+	{
+	case 0:
+		if ((*(cur_block.get_cell() + ((cell_y_location + 1) * 4) + cell_x_location)).Is_active())
+			return false;
+		break;
+	case 3:
+		if ((*(cur_block.get_cell() + ((cell_y_location - 1) * 4) + cell_x_location)).Is_active())
+			return false;
+		break;
+	default:
+		if ((*(cur_block.get_cell() + ((cell_y_location + 1) * 4) + cell_x_location)).Is_active())
+			return false;
+		if ((*(cur_block.get_cell() + ((cell_y_location - 1) * 4) + cell_x_location)).Is_active())
+			return false;
+	}
+	return true;
 }
 */
