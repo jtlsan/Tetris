@@ -111,6 +111,7 @@ void Map::DrawBlock(ExtendedBlock& cur_block)
 				std::cout << "бс";
 			}
 		}
+	gotoxy(0, 0);
 	/*
 	gotoxy(50, 5);
 	for (int i = 0; i < 22; i++)

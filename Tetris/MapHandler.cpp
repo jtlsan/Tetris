@@ -5,6 +5,7 @@
 #include <ctime>
 #include <mutex>
 #include "exceptions.h"
+#include "interface.h"
 
 std::mutex mtx;
 
@@ -23,9 +24,20 @@ MapHandler::~MapHandler()
 }
 
 
+void MapHandler::InitInterface()
+{
+	DrawNextBlockSquare();
+}
+
+
 void MapHandler::GenerateCurBlock()
 {
-	//type ¹Ù²Ù±â
+	static bool start = true;
+	if (!start)
+	{
+		cur_block = next_block;
+		return;
+	}
 	int type = 0;
 	srand((unsigned int)time(0));
 	while (type == 0 || type == 7)
@@ -39,6 +51,7 @@ void MapHandler::GenerateCurBlock()
 	ExtendedBlock block(type);
 	cur_block = block;
 	map.DrawBlock(block);
+	start = false;
 }
 
 
@@ -55,6 +68,7 @@ void MapHandler::GenerateNextBlock()
 	}
 	ExtendedBlock block(type);
 	next_block = block;
+	DrawNextBlock(next_block);
 }
 
 

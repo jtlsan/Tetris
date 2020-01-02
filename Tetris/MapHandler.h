@@ -16,6 +16,7 @@ private:
 public:
 	MapHandler();
 	~MapHandler();
+	void InitInterface();
 	void GenerateCurBlock();
 	void GenerateNextBlock();
 	void SwitchNextToCurBlock();
