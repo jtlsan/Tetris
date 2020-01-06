@@ -30,6 +30,7 @@ Map::~Map()
 void Map::InitialDraw()
 {
 	int x = 10, y = 5;
+	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 15);
 	gotoxy(x, y);
 	for (int i = 0; i < 12; i++)
 		std::cout << "¡á";
@@ -88,6 +89,14 @@ void Map::MoveByArrow(ExtendedBlock& cur_block, int input_arrow)
 		break;
 		// case Arrow::DOWN ÇÊ¿ä
 	case Arrow::DOWN:
+		try
+		{
+			PullDownBlock(cur_block);
+		}
+		catch(MovementException& expn)
+		{ }
+		break;
+	case Arrow::SPACEBAR:
 		PullToBottom(cur_block);
 		break;
 	}

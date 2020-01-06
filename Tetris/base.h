@@ -23,7 +23,15 @@
 		UP = 72,
 		DOWN = 80,
 		LEFT = 75,
-		RIGHT = 77
+		RIGHT = 77,
+		SPACEBAR = 32
+	};
+
+	enum Menu
+	{
+		END = 0,
+		START = 1,
+		KEY = 2
 	};
 
 	void gotoxy(int, int);

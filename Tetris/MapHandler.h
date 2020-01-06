@@ -2,6 +2,7 @@
 #define __MAP_HANDLER_H__
 
 #include "map.h"
+#include "interface.h"
 
 
 
@@ -9,12 +10,14 @@ class MapHandler
 {
 private:
 	Map map;
+	Interface& main_interface;
 	bool game_result;
 	int before_type;
+	int level;
 	ExtendedBlock cur_block;
 	ExtendedBlock next_block;
 public:
-	MapHandler();
+	MapHandler(Interface&, int);
 	~MapHandler();
 	void InitInterface();
 	void GenerateCurBlock();

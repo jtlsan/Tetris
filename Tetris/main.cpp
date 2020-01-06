@@ -4,33 +4,17 @@
 #include <iostream>
 #include "blocks.h"
 #include "base.h"
-#include "map.h"
-#include "MapHandler.h"
-#include <thread>
-#include <cstdio>
-
-
-
-
-
+#include "systemhandler.h"
 
 int main() {
 	SetConsoleTitle("Tetris");
-	MapHandler mapManager;
-	mapManager.InitInterface();
-	while (mapManager.get_game_result())
-	{
-		mapManager.GenerateCurBlock();
-		mapManager.GenerateNextBlock();
-		std::thread by_time{ [&mapManager]()->void {mapManager.PlayByTime(); return; } };
-		std::thread by_input{ [&mapManager]()->void {mapManager.PlayByInput(); return; } };
-		
-		by_input.detach();
-		by_time.join();
-		mapManager.PushBlock();
-		mapManager.DeleteFullLine();
-		
-	}
+	system("mode con lines=32 cols=90");
+	SystemHandler system_manager;
+	system_manager.ShowTitle();
+	system_manager.ShowMenu();
+	gotoxy(0, 29);
+	
+	//StartGame(main_interface);
 	
 	
 

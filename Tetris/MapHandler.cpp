@@ -5,15 +5,17 @@
 #include <ctime>
 #include <mutex>
 #include "exceptions.h"
-#include "interface.h"
+
 
 std::mutex mtx;
 
-MapHandler::MapHandler()
+MapHandler::MapHandler(Interface& main_interface, int _level)
+	: main_interface(main_interface)
 {
 	map.InitialDraw();
 	srand((unsigned int)time(0));
 	game_result = true;
+	level = _level;
 	//before_type = 0;
 }
 
@@ -26,7 +28,7 @@ MapHandler::~MapHandler()
 
 void MapHandler::InitInterface()
 {
-	DrawNextBlockSquare();
+	main_interface.DrawNextBlockSquare();
 }
 
 
@@ -68,7 +70,7 @@ void MapHandler::GenerateNextBlock()
 	}
 	ExtendedBlock block(type);
 	next_block = block;
-	DrawNextBlock(next_block);
+	main_interface.DrawNextBlock(next_block);
 }
 
 
@@ -93,6 +95,7 @@ void MapHandler::PlayByInput()
 
 void MapHandler::PlayByTime()
 {
+	int time_gap = 1500 / level;
 	while (!map.IsLanded(cur_block))
 	{
 		try
@@ -108,7 +111,7 @@ void MapHandler::PlayByTime()
 			map.DrawBlock(cur_block);
 		}
 		mtx.unlock();
-		Sleep(1000);
+		Sleep(time_gap);
 	}
 	if (map.IsLost())
 		game_result = false;

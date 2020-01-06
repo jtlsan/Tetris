@@ -5,5 +5,6 @@ class MovementException
 {
 public:
 	void ShowExceptionReason();
+	
 };
 #endif
